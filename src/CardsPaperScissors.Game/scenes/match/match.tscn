@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://brh5cbilag5mp"]
+
+[ext_resource type="Script" path="res://scenes/match/MatchScene.cs" id="1_hogdn"]
+[ext_resource type="PackedScene" uid="uid://bbmg53stv5tmd" path="res://cards/card_node.tscn" id="2_r1365"]
+[ext_resource type="Script" path="res://scenes/match/HandNode.cs" id="3_yvaed"]
+
+[node name="Match" type="Node2D"]
+script = ExtResource("1_hogdn")
+_cardModel = ExtResource("2_r1365")
+
+[node name="OpponentHand" type="Node2D" parent="."]
+position = Vector2(410, 157)
+script = ExtResource("3_yvaed")
+IsHidden = true
+
+[node name="PlayerHand" type="Node2D" parent="."]
+position = Vector2(410, 507)
+script = ExtResource("3_yvaed")
+
+[node name="PlayerField" type="Node2D" parent="."]
+position = Vector2(460, 320)
+
+[node name="OpponentField" type="Node2D" parent="."]
+position = Vector2(560, 320)

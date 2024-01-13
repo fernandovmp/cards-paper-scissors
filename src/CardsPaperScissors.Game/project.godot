@@ -15,9 +15,13 @@ run/main_scene="res://menu.tscn"
 config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [dotnet]
 
-project/assembly_name="cards-paper-scissors"
+project/assembly_name="CardsPaperScissors"
 
 [rendering]
 
