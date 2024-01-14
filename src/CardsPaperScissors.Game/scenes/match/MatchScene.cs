@@ -68,7 +68,6 @@ public partial class MatchScene : Node2D
 			_moveService.MoveToAsync(obj, _playerField.GlobalPosition, CardAnimationSpeed),
 			_moveService.MoveToAsync(opponentCard, _opponentField.GlobalPosition, CardAnimationSpeed)
 		);
-		GD.Print("TERM");
 		await ToSignal(GetTree().CreateTimer(1), "timeout");
 		EvaluateWinner(obj, opponentCard);
 		await ToSignal(GetTree().CreateTimer(1), "timeout");

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CardsPaperScissors.Game.Cards;
 using CardsPaperScissors.Game.Scenes.Match;
 using CardsPaperScissors.Game.Utils;
+using FernandoVmp.GodotUtils.Scene;
 using FernandoVmp.GodotUtils.Services;
 using Godot;
 
@@ -54,6 +55,7 @@ public partial class PreMatchScene : Node2D
     {
         var cache = new MemoryCacheService();
         cache.AddOrReplace(Constants.DeckKey, deck);
-        GetTree().ChangeSceneToFile(Constants.MatchScene);
+        var root = GetNode(Constants.RootNode);
+        SceneLoader.LoadInto(root, Constants.MatchScene);
     }
 }

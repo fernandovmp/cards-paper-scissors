@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwa3i4vjoao70"]
+
+[ext_resource type="Texture2D" uid="uid://b1uav2lktp0o4" path="res://textures/background.tres" id="1_vcuob"]
+
+[node name="Background" type="Sprite2D"]
+texture_repeat = 2
+position = Vector2(580, 335)
+texture = ExtResource("1_vcuob")
+region_enabled = true
+region_rect = Rect2(0, 0, 1200, 800)
