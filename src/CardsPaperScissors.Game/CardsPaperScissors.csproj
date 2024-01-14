@@ -5,4 +5,7 @@
     <RootNamespace>CardsPaperScissors.Game</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FernandoVmp.GodotUtils\FernandoVmp.GodotUtils.csproj" />
+  </ItemGroup>
 </Project>

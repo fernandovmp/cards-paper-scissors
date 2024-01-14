@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CardsPaperScissors.Game.Cards;
+using FernandoVmp.GodotUtils.Nodes;
 using Godot;
 
 namespace CardsPaperScissors.Game.Scenes.Match;
@@ -35,9 +37,14 @@ public partial class MatchScene : Node2D
 	private Deck _deck = new Deck();
 	private Node2D _playerField;
 	private Node2D _opponentField;
+	private MoveServiceNode _moveService = default!;
+	
+	private const float CardAnimationSpeed = 300;
 
 	public override void _Ready()
 	{
+		_moveService = new MoveServiceNode();
+		AddChild(_moveService);
 		PlayerHandNode = GetNode<HandNode>("PlayerHand");
 		OpponentHandNode = GetNode<HandNode>("OpponentHand");
 		_playerField = GetNode<Node2D>("PlayerField");
@@ -56,8 +63,11 @@ public partial class MatchScene : Node2D
 	{
 		var opponentCard = OpponentHandNode.GetRandomCard();
 		opponentCard.ShowValue();
-		obj.GlobalPosition = _playerField.GlobalPosition;
-		opponentCard.GlobalPosition = _opponentField.GlobalPosition;
+		await Task.WhenAll(
+			_moveService.MoveToAsync(obj, _playerField.GlobalPosition, CardAnimationSpeed),
+			_moveService.MoveToAsync(opponentCard, _opponentField.GlobalPosition, CardAnimationSpeed)
+		);
+		GD.Print("TERM");
 		await ToSignal(GetTree().CreateTimer(1), "timeout");
 		EvaluateWinner(obj, opponentCard);
 		await ToSignal(GetTree().CreateTimer(1), "timeout");
