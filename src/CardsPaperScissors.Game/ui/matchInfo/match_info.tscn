@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddqtrjsim51cg"]
+
+[ext_resource type="Script" path="res://ui/matchInfo/MatchInfoControl.cs" id="1_0rhvl"]
+[ext_resource type="Texture2D" uid="uid://ckxinf7oi0qvr" path="res://ui/matchInfo/line.png" id="1_yj0wu"]
+[ext_resource type="Texture2D" uid="uid://dnua6bf05250q" path="res://ui/matchInfo/point_black.png" id="2_nd0gf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_2h0ov"]
+font_size = 32
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
+
+[node name="MatchInfo" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_0rhvl")
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -115.0
+offset_top = -61.0
+offset_right = 113.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "YOU"
+label_settings = SubResource("LabelSettings_2h0ov")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Line" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_yj0wu")
+
+[node name="Points" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = -94.0
+offset_top = 8.0
+offset_right = 97.0
+offset_bottom = 40.0
+
+[node name="Point1" type="TextureRect" parent="Points"]
+layout_mode = 2
+texture = ExtResource("2_nd0gf")
+expand_mode = 2
+
+[node name="Point2" type="TextureRect" parent="Points"]
+layout_mode = 2
+texture = ExtResource("2_nd0gf")
+expand_mode = 2

@@ -45,4 +45,6 @@ public partial class HandNode : Node2D
         int indice = new Random().Next(_cards.Count);
         return _cards[indice];
     }
+
+    public bool HasCard() => _cards.Count > 0;
 }
