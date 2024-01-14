@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CardsPaperScissors.Game.Cards;
 using FernandoVmp.GodotUtils.Nodes;
+using FernandoVmp.GodotUtils.Services;
 using Godot;
 
 namespace CardsPaperScissors.Game.Scenes.Match;
@@ -50,8 +51,8 @@ public partial class MatchScene : Node2D
 		_playerField = GetNode<Node2D>("PlayerField");
 		_opponentField = GetNode<Node2D>("OpponentField");
 
-		_deck.AddRange(PlayerCards);
-		_deck.AddRange(OpponentCards);
+		var cache = new MemoryCacheService();
+		_deck = cache.GetValueOrDefault<Deck>("deck") ?? new Deck();
 		_deck.Shuffle();
 
 		PlayerHandNode.OnPlay += OnPlay;

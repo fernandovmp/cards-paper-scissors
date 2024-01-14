@@ -8,10 +8,20 @@ namespace CardsPaperScissors.Game.Scenes.Match;
 public class Deck
 {
     private List<Card> _cards = new List<Card>();
+    private HashSet<Card> _revealedCards = new HashSet<Card>();
+    public IReadOnlyCollection<Card> Cards => _cards;
 
     public void AddRange(IEnumerable<Card> cards) => _cards.AddRange(cards);
     
     public void Add(Card card) => _cards.Add(card);
+
+    public void Reveal(int amount)
+    {
+        _revealedCards.Add(_cards[_cards.Count - 1]);
+        _revealedCards.Add(_cards[_cards.Count - 2]);
+    }
+
+    public bool IsRevealed(Card card) => _revealedCards.Contains(card);
 
     public void Shuffle()
     {

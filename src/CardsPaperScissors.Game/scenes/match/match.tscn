@@ -9,16 +9,16 @@ script = ExtResource("1_hogdn")
 _cardModel = ExtResource("2_r1365")
 
 [node name="OpponentHand" type="Node2D" parent="."]
-position = Vector2(410, 157)
+position = Vector2(500, 150)
 script = ExtResource("3_yvaed")
 IsHidden = true
 
 [node name="PlayerHand" type="Node2D" parent="."]
-position = Vector2(410, 507)
+position = Vector2(500, 500)
 script = ExtResource("3_yvaed")
 
 [node name="PlayerField" type="Node2D" parent="."]
-position = Vector2(460, 320)
+position = Vector2(526, 320)
 
 [node name="OpponentField" type="Node2D" parent="."]
-position = Vector2(560, 320)
+position = Vector2(626, 320)

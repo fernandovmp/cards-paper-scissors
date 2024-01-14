@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://cd3haiapkvu6l"]
+
+[ext_resource type="Script" path="res://scenes/preMatch/PreMatchScene.cs" id="1_n0glg"]
+[ext_resource type="Script" path="res://scenes/preMatch/DeckNode.cs" id="2_rtykf"]
+[ext_resource type="PackedScene" uid="uid://bbmg53stv5tmd" path="res://cards/card_node.tscn" id="3_n6vlc"]
+[ext_resource type="Script" path="res://scenes/match/HandNode.cs" id="4_0354t"]
+
+[node name="PreMatch" type="Node2D"]
+script = ExtResource("1_n0glg")
+_cardModel = ExtResource("3_n6vlc")
+
+[node name="DeckNode" type="Node2D" parent="."]
+position = Vector2(120, 200)
+script = ExtResource("2_rtykf")
+_cardModel = ExtResource("3_n6vlc")
+
+[node name="SelectionHand" type="Node2D" parent="."]
+position = Vector2(500, 500)
+script = ExtResource("4_0354t")
