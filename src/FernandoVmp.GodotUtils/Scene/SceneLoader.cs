@@ -13,8 +13,12 @@ public static class SceneLoader
     public static void LoadInto(Node root, PackedScene packedScene)
     {
         var instance = packedScene.Instantiate();
-        if(root.GetChildCount() > 0)
-            root.RemoveChild(root.GetChild(0));
+        if (root.GetChildCount() > 0)
+        {
+            var child = root.GetChild(0);
+            root.RemoveChild(child);
+            child.QueueFree();
+        }
         root.AddChild(instance);
     }
 }
