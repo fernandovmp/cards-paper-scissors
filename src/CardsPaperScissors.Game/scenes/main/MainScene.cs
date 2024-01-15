@@ -11,6 +11,6 @@ public partial class MainScene : Node2D
     public override void _Ready()
     {
         _root = GetNode(Constants.RootNode);
-        SceneLoader.LoadInto(_root, Constants.PreMatchScene);
+        SceneLoader.LoadInto(_root, Constants.MenuScene);
     }
 }

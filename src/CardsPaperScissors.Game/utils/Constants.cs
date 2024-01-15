@@ -7,4 +7,5 @@ public static class Constants
     public const string PreMatchScene = "res://scenes/preMatch/pre_match.tscn";
     public const string RootNode = "/root/Main/Root";
     public const string PointTexture = "res://ui/matchInfo/point.png";
+    public const string MenuScene = "res://scenes/menu/menu.tscn";
 }
