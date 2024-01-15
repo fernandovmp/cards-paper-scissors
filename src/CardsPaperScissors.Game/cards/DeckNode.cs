@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CardsPaperScissors.Game.settings;
+using CardsPaperScissors.Game.Utils;
 using Godot;
 
 namespace CardsPaperScissors.Game.Cards;
@@ -56,6 +57,6 @@ public partial class DeckNode : Node2D
         cardNode.IsHidden = !Deck.IsRevealed(card);
         cardNode._Ready();
         AddChild(cardNode);
-        _lastMarginX += 100;
+        _lastMarginX += Constants.CardGap;
     }
 }

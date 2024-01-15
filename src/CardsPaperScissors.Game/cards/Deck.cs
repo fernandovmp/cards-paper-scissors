@@ -16,8 +16,10 @@ public class Deck
 
     public void Reveal(int amount)
     {
-        _revealedCards.Add(_cards[_cards.Count - 1]);
-        _revealedCards.Add(_cards[_cards.Count - 2]);
+        for (int i = 0; i < amount; i++)
+        {
+            _revealedCards.Add(_cards[_cards.Count - 1 - i]);
+        }
     }
 
     public bool IsRevealed(Card card) => _revealedCards.Contains(card);

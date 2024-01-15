@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CardsPaperScissors.Game.Cards;
 using CardsPaperScissors.Game.settings;
 using CardsPaperScissors.Game.Utils;
+using FernandoVmp.GodotUtils.Extensions;
 using FernandoVmp.GodotUtils.Scene;
 using FernandoVmp.GodotUtils.Services;
 using Godot;
@@ -43,7 +44,7 @@ public partial class PreMatchScene : Node2D
 		_addedCards++;
 		if (_addedCards == _matchSettings.CardsToAdd)
 		{
-			await ToSignal(GetTree().CreateTimer(1), "timeout");
+			await this.WaitForSeconds(1);
 			StartMatch(_deckNode.Deck);
 		}
 		else

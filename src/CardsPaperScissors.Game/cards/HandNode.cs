@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CardsPaperScissors.Game.Cards;
+using CardsPaperScissors.Game.Utils;
 using Godot;
 
 namespace CardsPaperScissors.Game.Cards;
@@ -29,7 +29,7 @@ public partial class HandNode : Node2D
             cardNode._Ready();
             AddChild(cardNode);
             _cards.Add(cardNode);
-            marginX += 100;
+            marginX += Constants.CardGap;
         }
     }
 
@@ -46,5 +46,6 @@ public partial class HandNode : Node2D
         return _cards[indice];
     }
 
-    public bool HasCard() => _cards.Count > 0;
+    public bool HasCard() => !IsEmpty();
+    public bool IsEmpty() => _cards.Count == 0;
 }
