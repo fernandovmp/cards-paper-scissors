@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CardsPaperScissors.Game.Cards;
 
-namespace CardsPaperScissors.Game.Scenes.Match;
+namespace CardsPaperScissors.Game.Cards;
 
 public class Deck
 {

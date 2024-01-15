@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://cd3haiapkvu6l"]
 
 [ext_resource type="Script" path="res://scenes/preMatch/PreMatchScene.cs" id="1_n0glg"]
-[ext_resource type="Script" path="res://scenes/preMatch/DeckNode.cs" id="2_rtykf"]
+[ext_resource type="Script" path="res://cards/DeckNode.cs" id="2_rtykf"]
 [ext_resource type="PackedScene" uid="uid://bbmg53stv5tmd" path="res://cards/card_node.tscn" id="3_n6vlc"]
-[ext_resource type="Script" path="res://scenes/match/HandNode.cs" id="4_0354t"]
+[ext_resource type="Script" path="res://cards/HandNode.cs" id="4_0354t"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1504d"]
 font_size = 36

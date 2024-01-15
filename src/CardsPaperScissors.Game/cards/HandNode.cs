@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CardsPaperScissors.Game.Cards;
 using Godot;
 
-namespace CardsPaperScissors.Game.Scenes.Match;
+namespace CardsPaperScissors.Game.Cards;
 
 public partial class HandNode : Node2D
 {

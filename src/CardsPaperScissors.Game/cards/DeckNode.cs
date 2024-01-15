@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using CardsPaperScissors.Game.Cards;
-using CardsPaperScissors.Game.Scenes.Match;
 using CardsPaperScissors.Game.settings;
 using Godot;
 
-namespace CardsPaperScissors.Game.Scenes.PreMatch;
+namespace CardsPaperScissors.Game.Cards;
 
 public partial class DeckNode : Node2D
 {

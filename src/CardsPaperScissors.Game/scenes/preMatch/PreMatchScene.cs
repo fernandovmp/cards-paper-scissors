@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using CardsPaperScissors.Game.Cards;
-using CardsPaperScissors.Game.Scenes.Match;
 using CardsPaperScissors.Game.settings;
 using CardsPaperScissors.Game.Utils;
 using FernandoVmp.GodotUtils.Scene;
