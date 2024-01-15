@@ -61,10 +61,7 @@ public partial class MatchScene : Node2D
 			_moveService.MoveToAsync(opponentCard, _opponentField.GlobalPosition, CardAnimationSpeed)
 		);
 		await ToSignal(GetTree().CreateTimer(1), "timeout");
-		EvaluateWinner(obj, opponentCard);
-		await ToSignal(GetTree().CreateTimer(1), "timeout");
-		PlayerHandNode.Remove(obj);
-		OpponentHandNode.Remove(opponentCard);
+		await EvaluateWinner(obj, opponentCard);
 		ValidateWinner();
 		_canPlay = true;
 	}
@@ -92,7 +89,7 @@ public partial class MatchScene : Node2D
 		GD.Print(result);
 	}
 
-	private void EvaluateWinner(CardNode playerCard, CardNode opponentCard)
+	private async Task EvaluateWinner(CardNode playerCard, CardNode opponentCard)
 	{
 		var value1 = playerCard.Card!.Value;
 		var value2 = opponentCard!.Card!.Value;
@@ -102,18 +99,35 @@ public partial class MatchScene : Node2D
 		if (winnervalue == null)
 		{
 			resultText = "Draw!";
+			await ToSignal(GetTree().CreateTimer(1), "timeout");
+			PlayerHandNode.Remove(playerCard);
+			OpponentHandNode.Remove(opponentCard);
 		}
 		else if (winnervalue == value1)
 		{
 			resultText = "Win!";
-			_playerInfo.MakePoint();
+			await AnimateCardWinAsync(playerCard, opponentCard, PlayerHandNode, OpponentHandNode, _playerInfo, -1);
 		}
 		else
 		{
 			resultText = "Lose!";
-			_opponentInfo.MakePoint();
+			await AnimateCardWinAsync(opponentCard, playerCard, OpponentHandNode, PlayerHandNode, _opponentInfo, 1);
 		}
 		GD.Print(resultText);
+	}
+
+	private async Task AnimateCardWinAsync(CardNode winnerNode, CardNode loserNode, HandNode winnerHand, HandNode loserHand,
+		MatchInfoControl winnerInfo,
+		int direction)
+	{
+		Vector2 dest = winnerNode.GlobalPosition + (new Vector2(100, 0) * direction);
+		await _moveService.MoveToAsync(winnerNode, dest, 300);
+		dest = winnerNode.GlobalPosition - (new Vector2(100, 0) * direction);
+		await _moveService.MoveToAsync(winnerNode, dest, 300);
+		loserHand.Remove(loserNode);
+		winnerInfo.MakePoint();
+		await ToSignal(GetTree().CreateTimer(1), "timeout");
+		winnerHand.Remove(winnerNode);
 	}
 
 	private static ECardValue? EvaluateWinner(ECardValue value1, ECardValue value2)
