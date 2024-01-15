@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CardsPaperScissors.Game.Cards;
 using CardsPaperScissors.Game.ui.matchInfo;
+using CardsPaperScissors.Game.Utils;
 using FernandoVmp.GodotUtils.Nodes;
+using FernandoVmp.GodotUtils.Scene;
 using FernandoVmp.GodotUtils.Services;
 using Godot;
 
@@ -26,6 +28,7 @@ public partial class MatchScene : Node2D
 	private bool _canPlay = true;
 	private MatchInfoControl _playerInfo = default!;
 	private MatchInfoControl _opponentInfo = default!;
+	private Label _resultText = default!;
 
 	public override void _Ready()
 	{
@@ -37,9 +40,11 @@ public partial class MatchScene : Node2D
 		_opponentField = GetNode<Node2D>("OpponentField");
 		_playerInfo = GetNode<MatchInfoControl>("UI/PlayerInfo");
 		_opponentInfo = GetNode<MatchInfoControl>("UI/OpponentInfo");
+		_resultText = GetNode<Label>("UI/Result");
 
 		_playerInfo.Initialize("YOU", flip: true);
 		_opponentInfo.Initialize("Opponent", flip: false);
+		_resultText.Hide();
 
 		var cache = new MemoryCacheService();
 		_deck = cache.GetValueOrDefault<Deck>("deck") ?? new Deck();
@@ -62,11 +67,20 @@ public partial class MatchScene : Node2D
 		);
 		await ToSignal(GetTree().CreateTimer(1), "timeout");
 		await EvaluateWinner(obj, opponentCard);
-		ValidateWinner();
-		_canPlay = true;
+		bool hasWinner = ValidateWinner();
+		if (hasWinner)
+		{
+			await ToSignal(GetTree().CreateTimer(3), "timeout");
+			var root = GetNode(Constants.RootNode);
+			SceneLoader.LoadInto(root, Constants.PreMatchScene);
+		}
+		else
+		{
+			_canPlay = true;
+		}
 	}
 
-	private void ValidateWinner()
+	private bool ValidateWinner()
 	{
 		bool emptyHand = !PlayerHandNode.HasCard();
 		string result;
@@ -84,9 +98,12 @@ public partial class MatchScene : Node2D
 		}
 		else
 		{
-			return;
+			return false;
 		}
-		GD.Print(result);
+
+		_resultText.Text = result;
+		_resultText.Show();
+		return true;
 	}
 
 	private async Task EvaluateWinner(CardNode playerCard, CardNode opponentCard)
@@ -95,25 +112,20 @@ public partial class MatchScene : Node2D
 		var value2 = opponentCard!.Card!.Value;
 
 		var winnervalue = EvaluateWinner(value1, value2);
-		string resultText;
 		if (winnervalue == null)
 		{
-			resultText = "Draw!";
 			await ToSignal(GetTree().CreateTimer(1), "timeout");
 			PlayerHandNode.Remove(playerCard);
 			OpponentHandNode.Remove(opponentCard);
 		}
 		else if (winnervalue == value1)
 		{
-			resultText = "Win!";
 			await AnimateCardWinAsync(playerCard, opponentCard, PlayerHandNode, OpponentHandNode, _playerInfo, -1);
 		}
 		else
 		{
-			resultText = "Lose!";
 			await AnimateCardWinAsync(opponentCard, playerCard, OpponentHandNode, PlayerHandNode, _opponentInfo, 1);
 		}
-		GD.Print(resultText);
 	}
 
 	private async Task AnimateCardWinAsync(CardNode winnerNode, CardNode loserNode, HandNode winnerHand, HandNode loserHand,

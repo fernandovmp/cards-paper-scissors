@@ -1,28 +1,33 @@
-[gd_scene load_steps=5 format=3 uid="uid://brh5cbilag5mp"]
+[gd_scene load_steps=6 format=3 uid="uid://brh5cbilag5mp"]
 
 [ext_resource type="Script" path="res://scenes/match/MatchScene.cs" id="1_hogdn"]
 [ext_resource type="PackedScene" uid="uid://bbmg53stv5tmd" path="res://cards/card_node.tscn" id="2_r1365"]
 [ext_resource type="Script" path="res://scenes/match/HandNode.cs" id="3_yvaed"]
 [ext_resource type="PackedScene" uid="uid://ddqtrjsim51cg" path="res://ui/matchInfo/match_info.tscn" id="4_7b0df"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_y8xuu"]
+font_size = 36
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
+
 [node name="Match" type="Node2D"]
 script = ExtResource("1_hogdn")
 _cardModel = ExtResource("2_r1365")
 
 [node name="OpponentHand" type="Node2D" parent="."]
-position = Vector2(500, 150)
+position = Vector2(475, 150)
 script = ExtResource("3_yvaed")
 IsHidden = true
 
 [node name="PlayerHand" type="Node2D" parent="."]
-position = Vector2(500, 500)
+position = Vector2(475, 500)
 script = ExtResource("3_yvaed")
 
 [node name="PlayerField" type="Node2D" parent="."]
-position = Vector2(526, 320)
+position = Vector2(500, 320)
 
 [node name="OpponentField" type="Node2D" parent="."]
-position = Vector2(626, 320)
+position = Vector2(650, 320)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -30,18 +35,34 @@ position = Vector2(626, 320)
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -144.0
-offset_top = 96.0
-offset_right = -144.0
-offset_bottom = 96.0
+offset_left = -152.0
+offset_top = 80.0
+offset_right = -152.0
+offset_bottom = 80.0
 grow_horizontal = 0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="PlayerInfo" parent="UI" instance=ExtResource("4_7b0df")]
-offset_left = 168.0
-offset_top = 96.0
-offset_right = 168.0
-offset_bottom = 96.0
+offset_left = 150.0
+offset_top = 80.0
+offset_right = 150.0
+offset_bottom = 80.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
+
+[node name="Result" type="Label" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "You won!"
+label_settings = SubResource("LabelSettings_y8xuu")
+horizontal_alignment = 1

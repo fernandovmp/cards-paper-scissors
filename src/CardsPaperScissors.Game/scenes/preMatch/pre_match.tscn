@@ -1,9 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://cd3haiapkvu6l"]
+[gd_scene load_steps=6 format=3 uid="uid://cd3haiapkvu6l"]
 
 [ext_resource type="Script" path="res://scenes/preMatch/PreMatchScene.cs" id="1_n0glg"]
 [ext_resource type="Script" path="res://scenes/preMatch/DeckNode.cs" id="2_rtykf"]
 [ext_resource type="PackedScene" uid="uid://bbmg53stv5tmd" path="res://cards/card_node.tscn" id="3_n6vlc"]
 [ext_resource type="Script" path="res://scenes/match/HandNode.cs" id="4_0354t"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1504d"]
+font_size = 36
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
 
 [node name="PreMatch" type="Node2D"]
 script = ExtResource("1_n0glg")
@@ -15,5 +20,19 @@ script = ExtResource("2_rtykf")
 _cardModel = ExtResource("3_n6vlc")
 
 [node name="SelectionHand" type="Node2D" parent="."]
-position = Vector2(500, 500)
+position = Vector2(475, 500)
 script = ExtResource("4_0354t")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -202.5
+offset_top = 40.0
+offset_right = 202.5
+offset_bottom = 90.0
+grow_horizontal = 2
+text = "Add 3 cards to the deck"
+label_settings = SubResource("LabelSettings_1504d")
