@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://4d6r3hyaxr7"]
+
+[ext_resource type="Texture2D" uid="uid://dnua6bf05250q" path="res://ui/matchInfo/point_black.png" id="1_t4lpj"]
+
+[node name="Point1" type="TextureRect"]
+texture = ExtResource("1_t4lpj")
+expand_mode = 2

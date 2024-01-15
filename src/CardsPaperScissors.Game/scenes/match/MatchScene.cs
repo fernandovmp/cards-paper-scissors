@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CardsPaperScissors.Game.Cards;
+using CardsPaperScissors.Game.settings;
 using CardsPaperScissors.Game.ui.matchInfo;
 using CardsPaperScissors.Game.Utils;
 using FernandoVmp.GodotUtils.Nodes;
@@ -29,6 +27,7 @@ public partial class MatchScene : Node2D
 	private MatchInfoControl _playerInfo = default!;
 	private MatchInfoControl _opponentInfo = default!;
 	private Label _resultText = default!;
+	private MatchSettings _matchSettings = MatchSettings.Default();
 
 	public override void _Ready()
 	{
@@ -42,8 +41,8 @@ public partial class MatchScene : Node2D
 		_opponentInfo = GetNode<MatchInfoControl>("UI/OpponentInfo");
 		_resultText = GetNode<Label>("UI/Result");
 
-		_playerInfo.Initialize("YOU", flip: true);
-		_opponentInfo.Initialize("Opponent", flip: false);
+		_playerInfo.Initialize("YOU", flip: true, _matchSettings.MatchPoint);
+		_opponentInfo.Initialize("Opponent", flip: false, _matchSettings.MatchPoint);
 		_resultText.Hide();
 
 		var cache = new MemoryCacheService();
@@ -51,8 +50,8 @@ public partial class MatchScene : Node2D
 		_deck.Shuffle();
 
 		PlayerHandNode.OnPlay += OnPlay;
-		PlayerHandNode.SetCards(_deck.Draw(3), _cardModel);		
-		OpponentHandNode.SetCards(_deck.Draw(3), _cardModel);
+		PlayerHandNode.SetCards(_deck.Draw(_matchSettings.HandSize), _cardModel);		
+		OpponentHandNode.SetCards(_deck.Draw(_matchSettings.HandSize), _cardModel);
 	}
 
 	private async void OnPlay(CardNode obj)
@@ -84,11 +83,11 @@ public partial class MatchScene : Node2D
 	{
 		bool emptyHand = !PlayerHandNode.HasCard();
 		string result;
-		if (_playerInfo.Points >= 2 || (emptyHand && _playerInfo.Points > _opponentInfo.Points))
+		if (_playerInfo.Points >= _matchSettings.MatchPoint || (emptyHand && _playerInfo.Points > _opponentInfo.Points))
 		{
 			result = "You won!";
 		}
-		else if (_opponentInfo.Points >= 2 || (emptyHand && _opponentInfo.Points > _playerInfo.Points))
+		else if (_opponentInfo.Points >= _matchSettings.MatchPoint || (emptyHand && _opponentInfo.Points > _playerInfo.Points))
 		{
 			result = "You lost!";
 		}

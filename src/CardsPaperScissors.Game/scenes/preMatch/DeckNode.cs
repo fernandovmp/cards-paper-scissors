@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CardsPaperScissors.Game.Cards;
 using CardsPaperScissors.Game.Scenes.Match;
+using CardsPaperScissors.Game.settings;
 using Godot;
 
 namespace CardsPaperScissors.Game.Scenes.PreMatch;
@@ -15,9 +16,10 @@ public partial class DeckNode : Node2D
 
     public override void _Ready()
     {
-        Deck.AddRange(GetRandomCards(4));
-        Deck.Reveal(2);
-        Deck.AddRange(GetRandomCards(3, origin: ECardOrigin.Opponent));
+        var settings = MatchSettings.Default();
+        Deck.AddRange(GetRandomCards(settings.RandomCards));
+        Deck.Reveal(settings.RevealedCards);
+        Deck.AddRange(GetRandomCards(settings.CardsToAdd, origin: ECardOrigin.Opponent));
         RenderCards();
     }
     

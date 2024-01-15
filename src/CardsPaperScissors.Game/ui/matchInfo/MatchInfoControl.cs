@@ -17,16 +17,18 @@ public partial class MatchInfoControl : Control
         _name = GetNode<Label>("Name");
         _line = GetNode<TextureRect>("Line");
         _pointsContainer = GetNode<HBoxContainer>("Points");
-        int childCount = _pointsContainer.GetChildCount();
-        for (int i = 0; i < childCount; i++)
-        {
-            _pointsTextures.Add(_pointsContainer.GetChild<TextureRect>(i));
-        }
     }
 
-    public void Initialize(string name, bool flip)
+    public void Initialize(string name, bool flip, int matchPoint)
     {
         _name.Text = name;
+        var model = GD.Load<PackedScene>(Constants.PointModel);
+        for (int i = 0; i < matchPoint; i++)
+        {
+            var instance = model.Instantiate<TextureRect>();
+            _pointsContainer.AddChild(instance);
+            _pointsTextures.Add(instance);
+        }
         if (flip)
         {
             _line.FlipH = true;
@@ -40,7 +42,6 @@ public partial class MatchInfoControl : Control
         if (Points > 0 && Points <= _pointsTextures.Count)
         {
             int index = _line.FlipH ? _pointsTextures.Count - Points : Points - 1;
-            GD.Print(index);
             _pointsTextures[index].Texture = ResourceLoader.Load<Texture2D>(Constants.PointTexture);
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CardsPaperScissors.Game.Cards;
 using CardsPaperScissors.Game.Scenes.Match;
+using CardsPaperScissors.Game.settings;
 using CardsPaperScissors.Game.Utils;
 using FernandoVmp.GodotUtils.Scene;
 using FernandoVmp.GodotUtils.Services;
@@ -18,6 +19,7 @@ public partial class PreMatchScene : Node2D
 
 	private bool _canAdd = true;
 	private int _addedCards = 0;
+	private MatchSettings _matchSettings = MatchSettings.Default();
 
 	private static List<Card> _selectableCards = new List<Card>
 	{
@@ -40,7 +42,7 @@ public partial class PreMatchScene : Node2D
 		_canAdd = false;
 		_deckNode.Add(card.Card!);
 		_addedCards++;
-		if (_addedCards == 3)
+		if (_addedCards == _matchSettings.CardsToAdd)
 		{
 			await ToSignal(GetTree().CreateTimer(1), "timeout");
 			StartMatch(_deckNode.Deck);
