@@ -11,11 +11,8 @@ public class Board
 {
     private readonly Node2D _node;
     private MoveServiceNode _moveService = default!;
-    private BoardContext _context = default!;
-    public HandNode PlayerHandNode { get; set; } = default!;
-    public HandNode OpponentHandNode { get; set; } = default!;
-    public Node2D PlayerField { get; set; } = default!;
-    public Node2D OpponentField { get; set; } = default!;
+    public PlayerContext Player { get; set; } = default!;
+    public PlayerContext Opponent { get; set; } = default!;
 
     public Board(Node2D node)
     {
@@ -25,58 +22,57 @@ public class Board
     public void Initialize(BoardContext context)
     {
         _moveService = context.MoveService;
-        _context = context;
-        PlayerHandNode = GetNode<HandNode>("PlayerHand");
-        OpponentHandNode = GetNode<HandNode>("OpponentHand");
-        PlayerField = GetNode<Node2D>("PlayerField");
-        OpponentField = GetNode<Node2D>("OpponentField");
 
-        PlayerHandNode.OnPlay += context.OnPlay;
+        Player = context.Player;
+        Opponent = context.Opponent;
+        
         var deck = context.Deck;
         var matchSettings = context.MatchSettings;
         var cardModel = context.CardModel;
-        PlayerHandNode.SetCards(deck.Draw(matchSettings.HandSize), cardModel);		
-        OpponentHandNode.SetCards(deck.Draw(matchSettings.HandSize), cardModel);
+        
+        deck.Shuffle();
+        
+        Player.OnPlay += context.OnPlay;
+        Player.Hand.SetCards(deck.Draw(matchSettings.HandSize), cardModel);		
+        Opponent.Hand.SetCards(deck.Draw(matchSettings.HandSize), cardModel);
     }
-
-    private T GetNode<T>(string path) where T : Node => _node.GetNode<T>(path);
     
-    public async Task EvaluateWinnerAsync(CardNode playerCard, CardNode opponentCard)
+    public async Task EvaluateWinnerAsync(PlayContext player, PlayContext opponent)
     {
-        var value1 = playerCard.Card!.Value;
-        var value2 = opponentCard!.Card!.Value;
+        var value1 = player.Card.Card!.Value;
+        var value2 = opponent.Card.Card!.Value;
 
         var winnervalue = Board.EvaluateWinner(value1, value2);
         if (winnervalue == null)
         {
             await _node.WaitForSeconds(1);
-            PlayerHandNode.Remove(playerCard);
-            OpponentHandNode.Remove(opponentCard);
+            DestoryCard(player);
+            DestoryCard(opponent);
         }
         else if (winnervalue == value1)
         {
-            await AnimateCardWinAsync(playerCard, opponentCard, PlayerHandNode, OpponentHandNode, _context.PlayerInfo, -1);
+            await AnimateCardWinAsync(player, opponent, -1);
         }
         else
         {
-            await AnimateCardWinAsync(opponentCard, playerCard, OpponentHandNode, PlayerHandNode, _context.OpponentInfo, 1);
+            await AnimateCardWinAsync(opponent, player, 1);
         }
     }
     
-    private async Task AnimateCardWinAsync(CardNode winnerNode, CardNode loserNode, HandNode winnerHand, HandNode loserHand,
-        MatchInfoControl winnerInfo,
-        int direction)
+    private async Task AnimateCardWinAsync(PlayContext winnerContext, PlayContext loserContext, int direction)
     {
         Vector2 offset = new Vector2(100, 0);
-        Vector2 dest = winnerNode.GlobalPosition + (offset * direction);
-        await _moveService.MoveToAsync(winnerNode, dest, 300);
-        dest = winnerNode.GlobalPosition - (offset * direction);
-        await _moveService.MoveToAsync(winnerNode, dest, 300);
-        loserHand.Remove(loserNode);
-        winnerInfo.MakePoint();
+        Vector2 dest = winnerContext.Card.GlobalPosition + (offset * direction);
+        await _moveService.MoveToAsync(winnerContext.Card, dest, 300);
+        dest = winnerContext.Card.GlobalPosition - (offset * direction);
+        await _moveService.MoveToAsync(winnerContext.Card, dest, 300);
+        DestoryCard(loserContext);
+        winnerContext.Owner.Info.MakePoint();
         await _node.WaitForSeconds(1);
-        winnerHand.Remove(winnerNode);
+        DestoryCard(winnerContext);
     }
+
+    private static void DestoryCard(PlayContext context) => context.Owner.Hand.Remove(context.Card);
     
     public static ECardValue? EvaluateWinner(ECardValue value1, ECardValue value2)
     {

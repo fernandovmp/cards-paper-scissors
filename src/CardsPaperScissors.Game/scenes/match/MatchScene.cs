@@ -16,50 +16,49 @@ public partial class MatchScene : Node2D
 	[Export]
 	private PackedScene _cardModel = default!;
 
-	private Deck _deck = new Deck();
 	private MoveServiceNode _moveService = default!;
 	
 	private const float CardAnimationSpeed = 300;
 	private bool _canPlay = true;
-	private MatchInfoControl _playerInfo = default!;
-	private MatchInfoControl _opponentInfo = default!;
 	private Label _resultText = default!;
 	private MatchSettings _matchSettings = MatchSettings.Default();
 	private Board _board = default!;
+	private PlayerContext _playerContext = default!;
+	private PlayerContext _opponentContext = default!;
 
 	public override void _Ready()
 	{
 		var cache = new MemoryCacheService();
-		_deck = cache.GetValueOrDefault<Deck>("deck") ?? new Deck();
-		_deck.Shuffle();
+		var deck = cache.GetValueOrDefault<Deck>("deck") ?? new Deck();
 		
 		_moveService = new MoveServiceNode();
 		AddChild(_moveService);
 		
-		_playerInfo = GetNode<MatchInfoControl>("UI/PlayerInfo");
-		_opponentInfo = GetNode<MatchInfoControl>("UI/OpponentInfo");
 		_resultText = GetNode<Label>("UI/Result");
 
-		_board = new Board(this);
-		_board.Initialize(new BoardContext(_deck, _matchSettings, _moveService, OnPlay, _cardModel, _playerInfo, _opponentInfo));
+		_playerContext = PlayerContext.CreateFrom("Player", this);
+		_opponentContext = PlayerContext.CreateFrom("Opponent", this);
 		
-		_playerInfo.Initialize("YOU", flip: true, _matchSettings.MatchPoint);
-		_opponentInfo.Initialize("Opponent", flip: false, _matchSettings.MatchPoint);
+		_board = new Board(this);
+		_board.Initialize(new BoardContext(deck, _matchSettings, _moveService, OnPlay, _cardModel, _playerContext, _opponentContext));
+		
+		_playerContext.Info.Initialize("YOU", flip: true, _matchSettings.MatchPoint);
+		_opponentContext.Info.Initialize("Opponent", flip: false, _matchSettings.MatchPoint);
 		_resultText.Hide();
 	}
 
-	private async void OnPlay(CardNode obj)
+	private async void OnPlay(PlayContext playerPlayContext)
 	{
 		if (!_canPlay) return;
 		_canPlay = false;
-		var opponentCard = _board.OpponentHandNode.GetRandomCard();
-		opponentCard.ShowValue();
+		var opponentPlay = _board.Opponent.GetRandomPlay();
+		opponentPlay.Card.ShowValue();
 		await Task.WhenAll(
-			_moveService.MoveToAsync(obj, _board.PlayerField.GlobalPosition, CardAnimationSpeed),
-			_moveService.MoveToAsync(opponentCard, _board.OpponentField.GlobalPosition, CardAnimationSpeed)
+			MoveCardAsync(playerPlayContext),
+			MoveCardAsync(opponentPlay)
 		);
 		await this.WaitForSeconds(0.5);
-		await _board.EvaluateWinnerAsync(obj, opponentCard);
+		await _board.EvaluateWinnerAsync(playerPlayContext, opponentPlay);
 		bool hasWinner = ValidateWinner();
 		if (hasWinner)
 		{
@@ -73,15 +72,18 @@ public partial class MatchScene : Node2D
 		}
 	}
 
+	public async Task MoveCardAsync(PlayContext context) =>
+		await _moveService.MoveToAsync(context.Card, context.Owner.Field.GlobalPosition, CardAnimationSpeed); 
+
 	private bool ValidateWinner()
 	{
-		bool emptyHand = _board.PlayerHandNode.IsEmpty();
+		bool emptyHand = _board.Player.Hand.IsEmpty();
 		string result;
-		if (_playerInfo.Points >= _matchSettings.MatchPoint || (emptyHand && _playerInfo.Points > _opponentInfo.Points))
+		if (_playerContext.Info.Points >= _matchSettings.MatchPoint || (emptyHand && _playerContext.Info.Points > _opponentContext.Info.Points))
 		{
 			result = "You won!";
 		}
-		else if (_opponentInfo.Points >= _matchSettings.MatchPoint || (emptyHand && _opponentInfo.Points > _playerInfo.Points))
+		else if (_opponentContext.Info.Points >= _matchSettings.MatchPoint || (emptyHand && _opponentContext.Info.Points > _playerContext.Info.Points))
 		{
 			result = "You lost!";
 		}

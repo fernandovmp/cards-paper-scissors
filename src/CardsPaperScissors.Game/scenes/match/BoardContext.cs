@@ -11,7 +11,7 @@ public record BoardContext(
     Deck Deck,
     MatchSettings MatchSettings,
     MoveServiceNode MoveService,
-    Action<CardNode> OnPlay,
+    Action<PlayContext> OnPlay,
     PackedScene CardModel,
-    MatchInfoControl PlayerInfo,
-    MatchInfoControl OpponentInfo);
+    PlayerContext Player,
+    PlayerContext Opponent);
