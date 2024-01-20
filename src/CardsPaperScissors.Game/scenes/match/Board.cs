@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using CardsPaperScissors.Game.Cards;
-using CardsPaperScissors.Game.ui.matchInfo;
 using FernandoVmp.GodotUtils.Extensions;
 using FernandoVmp.GodotUtils.Nodes;
 using Godot;
@@ -13,6 +12,7 @@ public class Board
     private MoveServiceNode _moveService = default!;
     public PlayerContext Player { get; set; } = default!;
     public PlayerContext Opponent { get; set; } = default!;
+    public Deck Deck { get; set; } = default!;
 
     public Board(Node2D node)
     {
@@ -25,16 +25,16 @@ public class Board
 
         Player = context.Player;
         Opponent = context.Opponent;
+        Deck = context.Deck;
         
-        var deck = context.Deck;
         var matchSettings = context.MatchSettings;
         var cardModel = context.CardModel;
         
-        deck.Shuffle();
+        Deck.Shuffle();
         
         Player.OnPlay += context.OnPlay;
-        Player.Hand.SetCards(deck.Draw(matchSettings.HandSize), cardModel);		
-        Opponent.Hand.SetCards(deck.Draw(matchSettings.HandSize), cardModel);
+        Player.Hand.SetCards(Deck.Draw(matchSettings.HandSize), cardModel);		
+        Opponent.Hand.SetCards(Deck.Draw(matchSettings.HandSize), cardModel);
     }
     
     public async Task EvaluateWinnerAsync(PlayContext player, PlayContext opponent)
@@ -76,35 +76,10 @@ public class Board
     
     public static ECardValue? EvaluateWinner(ECardValue value1, ECardValue value2)
     {
+        if (value1 == Card.GetWinningValue(value2))
+            return value1;
         if (value1 == value2)
-        {
             return null;
-        }
-        if (value1 == ECardValue.Rock && value2 == ECardValue.Paper)
-        {
-            return value2;
-        }
-        if (value1 == ECardValue.Rock && value2 == ECardValue.Scissors)
-        {
-            return value1;
-        }
-        if (value1 == ECardValue.Paper && value2 == ECardValue.Rock)
-        {
-            return value1;
-        }
-        if (value1 == ECardValue.Paper && value2 == ECardValue.Scissors)
-        {
-            return value2;
-        }
-        if (value1 == ECardValue.Scissors && value2 == ECardValue.Rock)
-        {
-            return value2;
-        }
-        if (value1 == ECardValue.Scissors && value2 == ECardValue.Paper)
-        {
-            return value1;
-        }
-
-        return null;
+        return value2;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using CardsPaperScissors.Game.Cards;
+using CardsPaperScissors.Game.Scenes.Match.Ia;
 using CardsPaperScissors.Game.ui.matchInfo;
 using Godot;
 
@@ -7,6 +8,7 @@ namespace CardsPaperScissors.Game.Scenes.Match;
 
 public record PlayerContext(MatchInfoControl Info, HandNode Hand, Node2D Field)
 {
+    public IPlayerAI? Ai { get; set; }
     public Action<PlayContext>? OnPlay { get; set; }
     public static PlayerContext CreateFrom(string name, Node root)
     {
@@ -23,7 +25,7 @@ public record PlayerContext(MatchInfoControl Info, HandNode Hand, Node2D Field)
         OnPlay?.Invoke(new PlayContext(this, card));
     }
 
-    public PlayContext GetRandomPlay() => new PlayContext(this, Hand.GetRandomCard());
+    public PlayContext MakePlay() => new PlayContext(this, Ai?.MakePlay() ?? Hand.GetRandomCard());
 };
 
 public record PlayContext(PlayerContext Owner, CardNode Card);

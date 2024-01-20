@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CardsPaperScissors.Game.Cards;
+using CardsPaperScissors.Game.Scenes.Match.Ia;
 using CardsPaperScissors.Game.settings;
-using CardsPaperScissors.Game.ui.matchInfo;
 using CardsPaperScissors.Game.Utils;
 using FernandoVmp.GodotUtils.Extensions;
 using FernandoVmp.GodotUtils.Nodes;
@@ -25,6 +25,7 @@ public partial class MatchScene : Node2D
 	private Board _board = default!;
 	private PlayerContext _playerContext = default!;
 	private PlayerContext _opponentContext = default!;
+	private GuessingPlayerAI _opponentAi = default!;
 
 	public override void _Ready()
 	{
@@ -36,11 +37,17 @@ public partial class MatchScene : Node2D
 		
 		_resultText = GetNode<Label>("UI/Result");
 
+		
 		_playerContext = PlayerContext.CreateFrom("Player", this);
 		_opponentContext = PlayerContext.CreateFrom("Opponent", this);
 		
+		_opponentAi = new GuessingPlayerAI(deck, ECardOrigin.Opponent, _opponentContext.Hand, _playerContext.Hand);
+		_opponentContext.Ai = _opponentAi;
+		_opponentAi.Initialize();
+		
 		_board = new Board(this);
 		_board.Initialize(new BoardContext(deck, _matchSettings, _moveService, OnPlay, _cardModel, _playerContext, _opponentContext));
+		_opponentAi.UpdateWithHand();
 		
 		_playerContext.Info.Initialize("YOU", flip: true, _matchSettings.MatchPoint);
 		_opponentContext.Info.Initialize("Opponent", flip: false, _matchSettings.MatchPoint);
@@ -51,12 +58,13 @@ public partial class MatchScene : Node2D
 	{
 		if (!_canPlay) return;
 		_canPlay = false;
-		var opponentPlay = _board.Opponent.GetRandomPlay();
+		var opponentPlay = _board.Opponent.MakePlay();
 		opponentPlay.Card.ShowValue();
 		await Task.WhenAll(
 			MoveCardAsync(playerPlayContext),
 			MoveCardAsync(opponentPlay)
 		);
+		_opponentAi.UpdateWith(playerPlayContext.Card.Card!);
 		await this.WaitForSeconds(0.5);
 		await _board.EvaluateWinnerAsync(playerPlayContext, opponentPlay);
 		bool hasWinner = ValidateWinner();

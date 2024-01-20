@@ -9,6 +9,7 @@ public class Deck
     private List<Card> _cards = new List<Card>();
     private HashSet<Card> _revealedCards = new HashSet<Card>();
     public IReadOnlyCollection<Card> Cards => _cards;
+    public IReadOnlyCollection<Card> RevealedCards => _revealedCards;
 
     public void AddRange(IEnumerable<Card> cards) => _cards.AddRange(cards);
     

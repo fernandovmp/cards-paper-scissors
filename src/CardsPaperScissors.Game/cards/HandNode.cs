@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CardsPaperScissors.Game.Utils;
 using Godot;
 
@@ -11,6 +12,7 @@ public partial class HandNode : Node2D
     [Export]
     public bool IsHidden { get; set; }
     public Action<CardNode>? OnPlay { get; set; }
+    public IEnumerable<Card> Cards => _cards.Select(x => x.Card!);
 
     public void SetCards(List<Card> cards, PackedScene cardModel)
     {
@@ -48,4 +50,26 @@ public partial class HandNode : Node2D
 
     public bool HasCard() => !IsEmpty();
     public bool IsEmpty() => _cards.Count == 0;
+
+    public CardNode GetCardAgainst(ECardValue value)
+    {
+        var winningValue = Card.GetWinningValue(value);
+        foreach (var card in _cards)
+        {
+            if (card.Card!.Value == winningValue)
+            {
+                return card;
+            }
+        }
+        
+        foreach (var card in _cards)
+        {
+            if (card.Card!.Value == value)
+            {
+                return card;
+            }
+        }
+
+        return _cards[0];
+    }
 }
