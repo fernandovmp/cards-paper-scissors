@@ -23,6 +23,6 @@ public class Card
 		ECardValue.Paper => ECardValue.Scissors,
 		ECardValue.Rock => ECardValue.Paper,
 		ECardValue.Scissors => ECardValue.Rock,
-		_ => throw new NotImplementedException()
+		_ => throw new InvalidOperationException()
 	};
 }

@@ -27,10 +27,13 @@ public partial class PreMatchScene : Node2D
 		new Card(ECardValue.Paper, ECardOrigin.Player),
 		new Card(ECardValue.Scissors, ECardOrigin.Player)
 	};
-	
+
+	private AudioStreamPlayer _cardSfx = default!;
+
 	public override void _Ready()
 	{
 		_deckNode = GetNode<DeckNode>("DeckNode");
+		_cardSfx = GetNode<AudioStreamPlayer>("CardSfxPlayer");
 		_selectionHand = GetNode<HandNode>("SelectionHand");
 		_selectionHand.OnPlay += OnSelect;
 		_selectionHand.SetCards(_selectableCards, _cardModel);
@@ -40,6 +43,7 @@ public partial class PreMatchScene : Node2D
 	{
 		if (!_canAdd) return;
 		_canAdd = false;
+		_cardSfx.Play();
 		_deckNode.Add(card.Card!);
 		_addedCards++;
 		if (_addedCards == _matchSettings.CardsToAdd)

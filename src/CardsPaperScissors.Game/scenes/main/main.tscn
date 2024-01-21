@@ -1,11 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://bagvkp1744c77"]
+[gd_scene load_steps=4 format=3 uid="uid://bagvkp1744c77"]
 
 [ext_resource type="Script" path="res://scenes/main/MainScene.cs" id="1_0f4t2"]
 [ext_resource type="PackedScene" uid="uid://bwa3i4vjoao70" path="res://textures/background.tscn" id="2_5pr8p"]
+[ext_resource type="AudioStream" uid="uid://8mveurhu55re" path="res://audio/jesse_spillane_gorgon_original.mp3" id="3_ug4so"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0f4t2")
 
 [node name="Background" parent="." instance=ExtResource("2_5pr8p")]
+
+[node name="BackgroundMusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_ug4so")
+volume_db = -35.0
+autoplay = true
 
 [node name="Root" type="Node2D" parent="."]

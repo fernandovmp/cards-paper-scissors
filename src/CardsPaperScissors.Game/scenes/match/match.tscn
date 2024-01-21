@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://brh5cbilag5mp"]
+[gd_scene load_steps=8 format=3 uid="uid://brh5cbilag5mp"]
 
 [ext_resource type="Script" path="res://scenes/match/MatchScene.cs" id="1_hogdn"]
 [ext_resource type="PackedScene" uid="uid://bbmg53stv5tmd" path="res://cards/card_node.tscn" id="2_r1365"]
 [ext_resource type="Script" path="res://cards/HandNode.cs" id="3_yvaed"]
 [ext_resource type="PackedScene" uid="uid://ddqtrjsim51cg" path="res://ui/matchInfo/match_info.tscn" id="4_7b0df"]
+[ext_resource type="AudioStream" uid="uid://c3qtdack62g4e" path="res://audio/card.ogg" id="5_a8ml6"]
+[ext_resource type="AudioStream" uid="uid://bjglberx08sm6" path="res://audio/card_flip.ogg" id="6_tk67x"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_y8xuu"]
 font_size = 36
@@ -66,3 +68,11 @@ grow_vertical = 2
 text = "You won!"
 label_settings = SubResource("LabelSettings_y8xuu")
 horizontal_alignment = 1
+
+[node name="CardSfxPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_a8ml6")
+volume_db = -12.0
+
+[node name="CardFlipSfxPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_tk67x")
+volume_db = -5.0

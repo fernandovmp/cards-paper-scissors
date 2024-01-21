@@ -18,7 +18,7 @@ public partial class MatchScene : Node2D
 
 	private MoveServiceNode _moveService = default!;
 	
-	private const float CardAnimationSpeed = 300;
+	private const float CardAnimationSpeed = 400;
 	private bool _canPlay = true;
 	private Label _resultText = default!;
 	private MatchSettings _matchSettings = MatchSettings.Default();
@@ -26,6 +26,7 @@ public partial class MatchScene : Node2D
 	private PlayerContext _playerContext = default!;
 	private PlayerContext _opponentContext = default!;
 	private GuessingPlayerAI _opponentAi = default!;
+	private AudioStreamPlayer _cardSfx = default!;
 
 	public override void _Ready()
 	{
@@ -36,7 +37,7 @@ public partial class MatchScene : Node2D
 		AddChild(_moveService);
 		
 		_resultText = GetNode<Label>("UI/Result");
-
+		_cardSfx = GetNode<AudioStreamPlayer>("CardSfxPlayer");
 		
 		_playerContext = PlayerContext.CreateFrom("Player", this);
 		_opponentContext = PlayerContext.CreateFrom("Opponent", this);
@@ -60,6 +61,7 @@ public partial class MatchScene : Node2D
 		_canPlay = false;
 		var opponentPlay = _board.Opponent.MakePlay();
 		opponentPlay.Card.ShowValue();
+		_cardSfx.Play();
 		await Task.WhenAll(
 			MoveCardAsync(playerPlayContext),
 			MoveCardAsync(opponentPlay)

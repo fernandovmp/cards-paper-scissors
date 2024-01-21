@@ -8,4 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FernandoVmp.GodotUtils\FernandoVmp.GodotUtils.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="credits.txt" />
+  </ItemGroup>
 </Project>

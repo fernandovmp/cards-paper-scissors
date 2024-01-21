@@ -10,6 +10,7 @@ public class Board
 {
     private readonly Node2D _node;
     private MoveServiceNode _moveService = default!;
+    private AudioStreamPlayer _cardFlipSfx = default!;
     public PlayerContext Player { get; set; } = default!;
     public PlayerContext Opponent { get; set; } = default!;
     public Deck Deck { get; set; } = default!;
@@ -22,6 +23,7 @@ public class Board
     public void Initialize(BoardContext context)
     {
         _moveService = context.MoveService;
+        _cardFlipSfx = _node.GetNode<AudioStreamPlayer>("CardFlipSfxPlayer"); 
 
         Player = context.Player;
         Opponent = context.Opponent;
@@ -61,6 +63,7 @@ public class Board
     
     private async Task AnimateCardWinAsync(PlayContext winnerContext, PlayContext loserContext, int direction)
     {
+        _cardFlipSfx.Play();
         Vector2 offset = new Vector2(100, 0);
         Vector2 dest = winnerContext.Card.GlobalPosition + (offset * direction);
         await _moveService.MoveToAsync(winnerContext.Card, dest, 300);
