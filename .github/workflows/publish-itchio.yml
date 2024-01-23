@@ -1,5 +1,5 @@
+name: Publish Itch.io
 on: workflow_dispatch
-
 jobs:
   export_game:
     runs-on: ubuntu-latest
@@ -25,5 +25,5 @@ jobs:
         name: builds
         path: | 
           build/linux
-          build/windows
+          build/win
           
