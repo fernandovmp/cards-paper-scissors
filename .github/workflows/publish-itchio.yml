@@ -1,5 +1,14 @@
 name: Publish Itch.io
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag'
+        required: true
+        type: string
+env:
+  ITCH_USERNAME: izero
+  ITCH_GAME_ID: cards-paper-scissors
 jobs:
   export_game:
     runs-on: ubuntu-latest
@@ -30,5 +39,26 @@ jobs:
       with:
         name: build-windows
         path: build/win/Windows Desktop
-          
-  
+
+  publish:
+    name: Deploy - Itch.io ${{ matrix.template }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        channel:
+          - windows
+          - linux
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-${{ matrix.channel }}
+          path: build/${{ matrix.channel }}
+      - uses: KikimoraGames/itch-publish@v0.0.3
+        with:
+          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
+          gameData: ./build/${{ matrix.template }}
+          itchUsername: ${{env.ITCH_USERNAME}}
+          itchGameId: ${{ env.ITCH_GAME_ID }}
+          buildChannel: ${{ matrix.channel }}
+          buildNumber: ${{ inputs.version }}
