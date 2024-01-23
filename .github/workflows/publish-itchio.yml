@@ -42,6 +42,7 @@ jobs:
 
   publish:
     name: Deploy - Itch.io ${{ matrix.template }}
+    needs: export_game
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
