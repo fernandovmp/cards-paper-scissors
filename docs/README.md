@@ -2,7 +2,7 @@
 
 **Engine:** Godot
 
-**Plataformas:** Web
+**Plataformas:** Windows, Linux
 
 ### Descrição
 
